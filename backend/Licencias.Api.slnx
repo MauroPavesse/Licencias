@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Licencias.Api/Licencias.Api.csproj" />
+  <Project Path="Licencias.Application/Licencias.Application.csproj" Id="01d765dd-5c33-47ec-8fe1-4ba350d1860e" />
+  <Project Path="Licencias.Domain/Licencias.Domain.csproj" Id="cedb36e6-347a-45b3-b926-abae239940d5" />
+  <Project Path="Licencias.Infrastructure/Licencias.Infrastructure.csproj" Id="59d1a5b0-cd4e-41a4-92a5-ca54c2b6040f" />
+</Solution>

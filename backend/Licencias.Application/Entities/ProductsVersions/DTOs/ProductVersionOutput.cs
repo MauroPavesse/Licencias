@@ -1,0 +1,16 @@
+﻿using Licencias.Application.Entities.Products.DTOs;
+using Licencias.Application.Entities.Subscriptions.DTOs;
+
+namespace Licencias.Application.Entities.ProductsVersions.DTOs
+{
+    public class ProductVersionOutput
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public decimal Price { get; set; }
+        public int ProductId { get; set; }
+        public ProductOutput? Product { get; set; }
+        public IEnumerable<SubscriptionOutput> Subscriptions { get; set; } = new List<SubscriptionOutput>();
+    }
+}

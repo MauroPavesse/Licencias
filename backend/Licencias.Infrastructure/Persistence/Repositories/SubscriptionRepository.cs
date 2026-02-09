@@ -51,7 +51,7 @@ namespace Licencias.Infrastructure.Persistence.Repositories
             {
                 includes.Add(i => i
                     .Include(t => t.Customer)
-                    .Include(t => t.ProductVersion)
+                    .Include(t => t.ProductVersion!.Product)
                     .Include(t => t.Payments)
                     .Include(t => t.Extras));
             }

@@ -10,11 +10,11 @@ namespace Licencias.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentPayment : ControllerBase
+    public class PaymentController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public PaymentPayment(IMediator mediator)
+        public PaymentController(IMediator mediator)
         {
             _mediator = mediator;
         }

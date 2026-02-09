@@ -9,11 +9,11 @@ namespace Licencias.Domain.Entities
         public DateTime ExpirationDate { get; set; }
         public StateEnum State { get; set; }
         public int CustomerId { get; set; }
-        public Customer Customer { get; set; } = new ();
+        public Customer? Customer { get; set; }
         public int ProductVersionId { get; set; }
-        public ProductVersion ProductVersion { get; set; } = new ();
+        public ProductVersion? ProductVersion { get; set; }
 
-        public IEnumerable<Payment> Payments { get; set; } = new List<Payment>();
-        public IEnumerable<Extra> Extras { get; set; } = new List<Extra>();
+        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public ICollection<Extra> Extras { get; set; } = new List<Extra>();
     }
 }

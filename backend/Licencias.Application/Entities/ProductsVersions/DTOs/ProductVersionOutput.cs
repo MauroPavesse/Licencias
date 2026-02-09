@@ -1,5 +1,4 @@
 ﻿using Licencias.Application.Entities.Products.DTOs;
-using Licencias.Application.Entities.Subscriptions.DTOs;
 
 namespace Licencias.Application.Entities.ProductsVersions.DTOs
 {
@@ -11,6 +10,5 @@ namespace Licencias.Application.Entities.ProductsVersions.DTOs
         public decimal Price { get; set; }
         public int ProductId { get; set; }
         public ProductOutput? Product { get; set; }
-        public IEnumerable<SubscriptionOutput> Subscriptions { get; set; } = new List<SubscriptionOutput>();
     }
 }

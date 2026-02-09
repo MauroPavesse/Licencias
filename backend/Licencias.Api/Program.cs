@@ -39,6 +39,14 @@ builder.Services.AddScoped<IProductVersionRepository, ProductVersionRepository>(
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IUnitOfWorkRepository, UnitOfWorkRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Open", builder =>
+        builder.AllowAnyOrigin()
+               .AllowAnyHeader()
+               .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
@@ -73,5 +81,7 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "Ocurrió un error al aplicar las migraciones.");
     }
 }
+
+app.UseCors("Open");
 
 app.Run();

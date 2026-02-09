@@ -39,7 +39,8 @@ namespace Licencias.Application.Entities.Subscriptions.Search
 
             var subscriptions = await _subscriptionRepository.SearchAsync(predicate, search.Includes, search.DisableTracking);
 
-            return subscriptions.Adapt<IEnumerable<SubscriptionOutput>>();
+            var outputs = subscriptions.Adapt<List<SubscriptionOutput>>();
+            return outputs;
         }
     }
 }

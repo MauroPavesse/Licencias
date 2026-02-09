@@ -20,7 +20,7 @@ namespace Licencias.Api.Controllers
         }
 
         [HttpPost("search")]
-        public async Task<IActionResult> Search([FromQuery] SearchCommand command)
+        public async Task<IActionResult> Search([FromBody] SearchCommand command)
         {
             var result = await _mediator.Send(new SubscriptionSearchCommand(command));
             return Ok(result);

@@ -1,4 +1,5 @@
-﻿using Licencias.Application.Entities.Subscriptions.DTOs;
+﻿using Licencias.Application.Entities.Extras.Create;
+using Licencias.Application.Entities.Subscriptions.DTOs;
 using Licencias.Application.Entities.UnitOfWork;
 using Licencias.Domain.Entities;
 using Licencias.Domain.Enums;
@@ -7,7 +8,7 @@ using MediatR;
 
 namespace Licencias.Application.Entities.Subscriptions.Create
 {
-    public record SubscriptionCreateCommand(DateTime StartDate, DateTime ExpirationDate, StateEnum State, int CustomerId, int ProductVersionId) : IRequest<SubscriptionOutput>;
+    public record SubscriptionCreateCommand(DateTime StartDate, DateTime ExpirationDate, StateEnum State, int CustomerId, int ProductVersionId, List<ExtraCreateCommand> Extras) : IRequest<SubscriptionOutput>;
 
     public class SubscriptionCreateHandler : IRequestHandler<SubscriptionCreateCommand, SubscriptionOutput>
     {
@@ -22,8 +23,11 @@ namespace Licencias.Application.Entities.Subscriptions.Create
 
         public async Task<SubscriptionOutput> Handle(SubscriptionCreateCommand request, CancellationToken cancellationToken)
         {
-            var subscription = await _subscriptionRepository.CreateAsync(request.Adapt<Subscription>());
+            var subscription = request.Adapt<Subscription>();
+
+            await _subscriptionRepository.CreateAsync(subscription);
             await _unitOfWorkRepository.SaveChangesAsync();
+
             return subscription.Adapt<SubscriptionOutput>();
         }
     }

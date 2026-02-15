@@ -39,7 +39,7 @@ namespace Licencias.Application.Entities.Products.Search
 
             var products = await _productRepository.SearchAsync(predicate, search.Includes, search.DisableTracking);
 
-            return products.Adapt<IEnumerable<ProductOutput>>();
+            return products.Adapt<List<ProductOutput>>();
         }
     }
 }

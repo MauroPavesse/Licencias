@@ -184,7 +184,7 @@ const Dashboard = () => {
               title="Total mes"
               value={totalMes}
               precision={2}
-              valueStyle={{ color: "#3f8600" }}
+              styles={{ content: { color: "#3f8600" } }}
               prefix={<DollarOutlined />}
             />
           </Card>
@@ -194,7 +194,7 @@ const Dashboard = () => {
             <Statistic
               title="Subscripciones impagas"
               value={impagas} // Subscripcion cuyo mes es menor o igual al mes actual
-              valueStyle={{ color: "#f1164dff" }}
+              styles={{ content: { color: "#f1164dff" } }}
               prefix={<ExceptionOutlined />}
             />
           </Card>
@@ -204,7 +204,7 @@ const Dashboard = () => {
             <Statistic
               title="Subscripciones pagas"
               value={pagas} // Subscripcion cuyo mes es mayor al mes actual
-              valueStyle={{ color: "#1699f1ff" }}
+              styles={{ content: { color: "#1699f1ff" } }}
               prefix={<FileDoneOutlined />}
             />
           </Card>

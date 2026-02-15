@@ -6,21 +6,18 @@ import { ExtraUpdateCommand } from "../DTOs/extras/ExtraUpdateCommand";
 export const extraService = {
   search: async (params) => {
     const body = new SearchCommand(params);
-
     const response = await api.post("/extra/search", body);
     return response.data;
   },
 
   create: async (params) => {
-    const body = new ExtraCreateCommand(params);
-
+    const body = new ExtraCreateCommand(params);;
     const response = await api.post("/extra", body);
     return response.data;
   },
 
   update: async (params) => {
     const body = new ExtraUpdateCommand(params);
-
     const response = await api.put("/extra", body);
     return response.data;
   },

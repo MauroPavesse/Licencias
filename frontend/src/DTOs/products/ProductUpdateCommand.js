@@ -1,11 +1,13 @@
 export class ProductUpdateCommand {
   constructor({
-    id = 0,
-    name = "",
-    description = ""
+    Id = 0,
+    Name = "",
+    Description = "",
+    ProductVersions = [],
   } = {}) {
-    this.Id = id;
-    this.Name = name;
-    this.Description = description;
+    this.Id = Id;
+    this.Name = Name;
+    this.Description = Description;
+    this.ProductVersions = ProductVersions;
   }
 }

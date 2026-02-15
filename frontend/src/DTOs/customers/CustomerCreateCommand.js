@@ -1,13 +1,13 @@
 export class CustomerCreateCommand {
   constructor({
-    name = "", 
-    email = "", 
-    phoneNumber = "", 
-    business = ""
+    Name = "", 
+    Email = "", 
+    PhoneNumber = "", 
+    Business = ""
   } = {}) {
-    this.Name = name;
-    this.email = email;
-    this.PhoneNumber = phoneNumber;
-    this.Business = business;
+    this.Name = Name;
+    this.Email = Email;
+    this.PhoneNumber = PhoneNumber;
+    this.Business = Business;
   }
 }

@@ -1,11 +1,11 @@
 export class ExtraCreateCommand {
   constructor({
-    name = "", 
-    description = "", 
-    price = 0
+    Name = "", 
+    Description = "", 
+    Price = 0
   } = {}) {
-    this.Name = name;
-    this.Description = description;
-    this.Price = price;
+    this.Name = Name;
+    this.Description = Description;
+    this.Price = Price;
   }
 }

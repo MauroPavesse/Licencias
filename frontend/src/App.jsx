@@ -3,6 +3,9 @@ import { AuthProvider } from "./context/AuthContext";
 import Login from './pages/Login';
 import ProtectedRoute from './routes/ProtectedRoute';
 import Dashboard from "./pages/Dashboard";
+import Clients from "./pages/Clients";
+import Products from "./pages/Products";
+import Extras from "./pages/Extras";
 
 function App() {
   return (
@@ -15,6 +18,9 @@ function App() {
           {/* Rutas Privadas (Protegidas)*/}
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/clients" element={<Clients />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/extras" element={<Extras />} />
           </Route>
 
           {/* Redirección por defecto si la ruta no existe */}

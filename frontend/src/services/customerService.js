@@ -20,7 +20,6 @@ export const customerService = {
 
   update: async (params) => {
     const body = new CustomerUpdateCommand(params);
-
     const response = await api.put("/customer", body);
     return response.data;
   },

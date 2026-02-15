@@ -1,13 +1,13 @@
 export class ExtraUpdateCommand {
   constructor({
-    id = 0,
-    name = "", 
-    description = "", 
-    price = 0
+    Id = 0,
+    Name = "", 
+    Description = "", 
+    Price = 0
   } = {}) {
-    this.Id = id;
-    this.Name = name;
-    this.Description = description;
-    this.Price = price;
+    this.Id = Id;
+    this.Name = Name;
+    this.Description = Description;
+    this.Price = Price;
   }
 }

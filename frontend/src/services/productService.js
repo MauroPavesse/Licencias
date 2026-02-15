@@ -5,24 +5,19 @@ import { ProductUpdateCommand } from "../DTOs/products/ProductUpdateCommand";
 
 export const productService = {
   search: async (params) => {
-     console.log("HOLAA")
     const body = new SearchCommand(params);
-
     const response = await api.post("/product/search", body);
-    console.log(response)
     return response.data;
   },
 
   create: async (params) => {
     const body = new ProductCreateCommand(params);
-
     const response = await api.post("/product", body);
     return response.data;
   },
 
   update: async (params) => {
     const body = new ProductUpdateCommand(params);
-
     const response = await api.put("/product", body);
     return response.data;
   },

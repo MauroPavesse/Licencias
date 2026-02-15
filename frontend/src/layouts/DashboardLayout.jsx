@@ -11,18 +11,18 @@ import { Link } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
 
-function getItem(label, key, icon) {
+function getItem(label, key, icon, path) {
   return {
     key,
     icon,
-    label,
+    label: path ? <Link to={path}>{label}</Link> : label,
   };
 }
 const items = [
-  getItem('Home', '1', <HomeOutlined />),
-  getItem('Clientes', '2', <TeamOutlined />),
-  getItem('Productos', '3', <DesktopOutlined />),
-  getItem('Extras', '4', <AppstoreAddOutlined />),
+  getItem('Home', '1', <HomeOutlined />, '/dashboard'),
+  getItem('Clientes', '2', <TeamOutlined />, '/clients'),
+  getItem('Productos', '3', <DesktopOutlined />, '/products'),
+  getItem('Extras', '4', <AppstoreAddOutlined />, '/extras'),
 ];
 
 const DashboardLayout = ({ children }) => {
@@ -38,7 +38,8 @@ const DashboardLayout = ({ children }) => {
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ padding: 0, background: colorBgContainer }}>
+        </Header>
         <Content style={{ margin: '0 16px' }}>
           {children}
         </Content>

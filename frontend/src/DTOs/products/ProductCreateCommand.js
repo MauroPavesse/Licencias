@@ -1,9 +1,11 @@
 export class ProductCreateCommand {
   constructor({
-    name = "",
-    description = ""
+    Name = "",
+    Description = "",
+    ProductVersions = [],
   } = {}) {
-    this.Name = name;
-    this.Description = description;
+    this.Name = Name;
+    this.Description = Description;
+    this.ProductVersions = ProductVersions;
   }
 }

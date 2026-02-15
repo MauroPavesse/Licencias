@@ -1,5 +1,5 @@
 import { Modal, Form, DatePicker, Select, message, Row, Col, Divider, Button, Table, InputNumber } from "antd";
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons"; // Faltaba importar DeleteOutlined
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { subscriptionService } from "../services/subscriptionService";
 import { customerService } from "../services/customerService";
@@ -149,7 +149,6 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
       onOk={handleOk}
       confirmLoading={confirmLoading}
       onCancel={onCancel}
-      destroyOnClose
       width={650}
     >
       <Form form={form} layout="vertical">
@@ -209,7 +208,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
           </Col>
         </Row>
 
-        <Divider orientation="left" className="text-gray-400 text-xs">EXTRAS</Divider>
+        <Divider titlePlacement="" orientation="left" className="text-gray-400 text-xs">EXTRAS</Divider>
         
         <Table
           dataSource={extras}

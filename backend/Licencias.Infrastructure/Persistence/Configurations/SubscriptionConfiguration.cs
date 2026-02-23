@@ -8,6 +8,10 @@ namespace Licencias.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Subscription> builder)
         {
+            builder.Property(t => t.HardwareId)
+                .IsRequired()
+                .HasMaxLength(50);
+
             builder.HasOne(t => t.Customer)
                    .WithMany(t => t.Subscriptions);
 

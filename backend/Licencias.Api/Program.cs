@@ -8,10 +8,13 @@ using Licencias.Application.Entities.Payments;
 using Licencias.Application.Entities.Products;
 using Licencias.Application.Entities.ProductsVersions;
 using Licencias.Application.Entities.Subscriptions;
+using Licencias.Application.Entities.Subscriptions.CreateToken;
 using Licencias.Application.Entities.UnitOfWork;
 using Licencias.Infrastructure.Data;
 using Licencias.Infrastructure.Persistence.Repositories;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +41,7 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductVersionRepository, ProductVersionRepository>();
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IUnitOfWorkRepository, UnitOfWorkRepository>();
+builder.Services.AddScoped<SubscriptionCreateTokenService>();
 
 builder.Services.AddCors(options =>
 {
@@ -46,6 +50,11 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader()
                .AllowAnyMethod());
 });
+
+var config = TypeAdapterConfig.GlobalSettings;
+config.Scan(typeof(ApplicationAssemblyMarker).Assembly);
+
+builder.Services.AddSingleton(config);
 
 var app = builder.Build();
 

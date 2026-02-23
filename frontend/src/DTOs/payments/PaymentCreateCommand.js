@@ -1,13 +1,13 @@
 export class PaymentCreateCommand {
   constructor({
-    amount = 0,
-    paymentDate = null,
-    period = null,
-    subscriptionId = 0
+    Amount = 0,
+    PaymentDate = null,
+    Period = null,
+    SubscriptionId = 0
   } = {}) {
-    this.Amount = amount;
-    this.PaymentDate = paymentDate;
-    this.Period = period;
-    this.SubscriptionId = subscriptionId;
+    this.Amount = Amount;
+    this.PaymentDate = PaymentDate;
+    this.Period = Period;
+    this.SubscriptionId = SubscriptionId;
   }
 }

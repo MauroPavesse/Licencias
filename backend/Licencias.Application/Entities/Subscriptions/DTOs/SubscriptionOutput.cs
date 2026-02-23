@@ -19,6 +19,8 @@ namespace Licencias.Application.Entities.Subscriptions.DTOs
         public ProductVersionOutput? ProductVersion { get; set; }
         public IEnumerable<PaymentOutput> Payments { get; set; } = new List<PaymentOutput>();
         public IEnumerable<ExtraOutput> Extras { get; set; } = new List<ExtraOutput>();
-        public decimal AmountTotal => ProductVersion != null ? Extras.Sum(t => t.Price) + ProductVersion.Price : Extras.Sum(t => t.Price);
+        public decimal AmountTotal => ProductVersion != null ? Extras.Sum(t => t.Price) + ProductVersion.Price : Extras != null ? Extras.Sum(t => t.Price) : 0;
+        public string Token { get; set; } = string.Empty;
+        public string HardwareId { get; set; } = string.Empty;
     }
 }

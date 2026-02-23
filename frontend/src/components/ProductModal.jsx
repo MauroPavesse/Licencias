@@ -1,8 +1,7 @@
-import { message, Button, Col, Divider, Form, Input, Modal, Row, Table, InputNumber} from 'antd'
-import React, { useState, useEffect } from 'react'
+import { message, Button, Divider, Form, Input, Modal, Table, InputNumber} from 'antd'
+import { useState, useEffect } from 'react'
 import { productService } from '../services/productService';
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import { SearchCommand } from "../DTOs/SearchCommand";
 
 const ProductModal = ({open, onCancel, onSuccess, initialValues}) => {
     const [form] = Form.useForm();

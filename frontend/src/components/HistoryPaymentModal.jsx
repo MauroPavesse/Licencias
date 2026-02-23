@@ -3,10 +3,13 @@ import { PlusOutlined, DollarCircleOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { paymentService } from "../services/paymentService";
 import { SearchCommand } from "../DTOs/SearchCommand";
+import NewPaymentModal from "./NewPaymentModal";
+import dayjs from "dayjs";
 
 const HistoryPaymentModal = ({ open, onCancel, subscriptionId, customerName }) => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isNewPaymentModalOpen, setIsNewPaymentModalOpen] = useState(false);
 
   // Cargar pagos al abrir
   useEffect(() => {
@@ -23,12 +26,18 @@ const HistoryPaymentModal = ({ open, onCancel, subscriptionId, customerName }) =
         filters: [{ field: "SubscriptionId", ids: [subscriptionId] }]
       });
       const data = await paymentService.search(command);
+      console.log(data);
       setDataSource(data);
     } catch (error) {
       message.error("Error al cargar el historial de pagos: " + error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSuccess = () => {
+    setIsNewPaymentModalOpen(false); // Cierra el modal
+    fetchPayments(); // Recarga la tabla con el nuevo dato
   };
 
   const columns = [
@@ -50,17 +59,9 @@ const HistoryPaymentModal = ({ open, onCancel, subscriptionId, customerName }) =
     },
     {
       title: "Periodo",
+      dataIndex: "period", // Agregamos dataIndex para obtener el valor directamente
       key: "period",
-      render: (_, record) => `${String(record.month).padStart(2, '0')}/${record.year}`,
-    },
-    {
-      title: "Estado",
-      dataIndex: "state",
-      render: (state) => (
-        <Tag color={state === 1 ? "green" : "volcano"}>
-          {state === 1 ? "Confirmado" : "Pendiente"}
-        </Tag>
-      ),
+      render: (date) => date ? dayjs(date).format("MM/YYYY") : "-",
     }
   ];
 
@@ -82,10 +83,10 @@ const HistoryPaymentModal = ({ open, onCancel, subscriptionId, customerName }) =
       ]}
     >
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'right' }}>
-        <Button 
-          type="primary" 
-          icon={<PlusOutlined />} 
-          onClick={() => message.info("Aquí abriríamos otro modal para crear el pago")}
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => setIsNewPaymentModalOpen(true)}
         >
           Registrar Pago
         </Button>
@@ -99,6 +100,13 @@ const HistoryPaymentModal = ({ open, onCancel, subscriptionId, customerName }) =
         pagination={{ pageSize: 5 }}
         size="small"
         bordered
+      />
+
+      <NewPaymentModal
+        open={isNewPaymentModalOpen}
+        onCancel={() => setIsNewPaymentModalOpen(false)}
+        onSuccess={handleSuccess}
+        subscriptionId={subscriptionId}
       />
     </Modal>
   );

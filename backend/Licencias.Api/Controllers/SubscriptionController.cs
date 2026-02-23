@@ -1,5 +1,6 @@
 ﻿using Licencias.Application.Entities.Subscriptions.Create;
 using Licencias.Application.Entities.Subscriptions.Delete;
+using Licencias.Application.Entities.Subscriptions.GetSubscription;
 using Licencias.Application.Entities.Subscriptions.Search;
 using Licencias.Application.Entities.Subscriptions.Update;
 using Licencias.Application.Shared;
@@ -44,6 +45,13 @@ namespace Licencias.Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _mediator.Send(new SubscriptionDeleteCommand(id));
+            return Ok(result);
+        }
+
+        [HttpPost("get-subscription")]
+        public async Task<IActionResult> GetSubscription([FromBody] SubscriptionGetSubscriptionCommand command)
+        {
+            var result = await _mediator.Send(command);
             return Ok(result);
         }
     }

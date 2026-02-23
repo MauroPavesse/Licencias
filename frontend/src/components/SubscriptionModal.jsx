@@ -1,4 +1,4 @@
-import { Modal, Form, DatePicker, Select, message, Row, Col, Divider, Button, Table, InputNumber } from "antd";
+import { Modal, Form, DatePicker, Select, message, Row, Col, Divider, Button, Table, InputNumber, Input } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
 import { subscriptionService } from "../services/subscriptionService";
@@ -6,8 +6,9 @@ import { customerService } from "../services/customerService";
 import { productVersionService } from "../services/productVersionService";
 import { productService } from "../services/productService";
 import { SearchCommand } from "../DTOs/SearchCommand";
+import dayjs from "dayjs";
 
-const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
+const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
   const [form] = Form.useForm();
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -19,29 +20,61 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
   const [extras, setExtras] = useState([]);
 
   useEffect(() => {
-    if (open) {
-      loadSelectData();
-      setExtras([]);
-      form.resetFields();
-    }
-  }, [open]);
+    const initializeForm = async () => {
+      if (open) {
+        // 1. Cargamos las listas de los Selects (Clientes, Productos, Versiones)
+        // Es vital esperar a que termine para tener 'allVersions' disponible
+        const vers = await loadSelectData();
+
+        if (initialValues) {
+          // 2. Mapeamos las fechas para Ant Design (RangePicker usa Dayjs)
+          const formattedValues = {
+            ...initialValues,
+            dates: [dayjs(initialValues.startDate), dayjs(initialValues.expirationDate)],
+          };
+
+          // 3. Seteamos los valores básicos en el form
+          form.setFieldsValue(formattedValues);
+
+          // 4. Lógica para el combo de VERSIÓN:
+          // Buscamos las versiones que pertenecen al producto de esta suscripción
+          if (initialValues.productVersion.productId) {
+            const filtered = vers.filter(v => v.productId === initialValues.productVersion.productId);
+            setFilteredVersions(filtered);
+            form.setFieldValue("productId", initialValues.productVersion.productId);
+            form.setFieldValue("productVersionId", initialValues.productVersion.id);
+          }
+
+          // Seteamos extras
+          setExtras(initialValues.extras || []);
+        } else {
+          form.resetFields();
+          setExtras([]);
+          setFilteredVersions([]);
+        }
+      }
+    };
+
+    initializeForm();
+  }, [open, initialValues]); // Se ejecuta al abrir o cambiar el registro a editar
 
   const loadSelectData = async () => {
     setLoadingLists(true);
     try {
-      const command = new SearchCommand(); 
+      const command = new SearchCommand();
       const [resCust, resProd, resVers] = await Promise.all([
         customerService.search(command),
         productService.search(command),
         productVersionService.search(command),
       ]);
-      
-      // Ajuste camelCase: resCust, resProd, resVers vienen del backend
+
       setCustomers(resCust);
       setProducts(resProd);
       setAllVersions(resVers);
+      return resVers;
     } catch (error) {
-      message.error("Error al cargar listas: " + error.message);
+      message.error("Error al cargar listas");
+      return [];
     } finally {
       setLoadingLists(false);
     }
@@ -49,7 +82,6 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
 
   const handleProductChange = (productId) => {
     form.setFieldValue("productVersionId", null);
-    // Ajuste camelCase: v.productId en minúscula
     const filtered = allVersions.filter((v) => v.productId === productId);
     setFilteredVersions(filtered);
   };
@@ -57,7 +89,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
   const addExtra = () => {
     const newExtra = {
       key: Date.now(),
-      name: "",        // Usamos minúsculas aquí también para consistencia
+      name: "", 
       description: "",
       price: 0,
     };
@@ -79,8 +111,9 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
     {
       title: "Descripción / Nombre",
       dataIndex: "description",
-      render: (_, record) => (
+      render: (value, record) => (
         <input
+          value={value}
           className="border p-1 w-full rounded outline-none focus:ring-1 focus:ring-blue-400"
           placeholder="Ej: Instalación"
           onChange={(e) => updateExtra(record.key, "description", e.target.value)}
@@ -91,8 +124,9 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
       title: "Precio",
       dataIndex: "price",
       width: 120,
-      render: (_, record) => (
+      render: (value, record) => (
         <InputNumber
+          value={value}
           min={0}
           className="w-full"
           onChange={(val) => updateExtra(record.key, "price", val)}
@@ -119,9 +153,11 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
       setConfirmLoading(true);
 
       const payload = {
+        Id: initialValues?.id ? initialValues.id : 0,
         StartDate: values.dates[0].format("YYYY-MM-DDTHH:mm:ss"),
         ExpirationDate: values.dates[1].format("YYYY-MM-DDTHH:mm:ss"),
         State: values.state,
+        HardwareId: values.hardwareId,
         CustomerId: values.customerId,
         ProductVersionId: values.productVersionId,
         // Mapeo final para el backend (PascalCase para que coincida con C#)
@@ -132,8 +168,14 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
         }))
       };
 
-      await subscriptionService.create(payload);
-      message.success("Suscripción creada");
+      if (initialValues?.id) {
+        await subscriptionService.update(initialValues.id, payload);
+        message.success("Suscripción actualizada");
+      } else {
+        await subscriptionService.create(payload);
+        message.success("Suscripción creada");
+      }
+
       onSuccess();
     } catch (error) {
       if (!error.errorFields) message.error("Error al guardar");
@@ -174,6 +216,13 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
           </Col>
         </Row>
 
+        <Form.Item label="Hardware ID" name="hardwareId" rules={[{ required: true }]}>
+          <Input
+            placeholder='Hardware ID'
+            required
+          />
+        </Form.Item>
+
         <Form.Item label="Cliente" name="customerId" rules={[{ required: true }]}>
           <Select
             placeholder="Seleccione un cliente"
@@ -201,7 +250,6 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
               <Select
                 placeholder="Seleccione versión"
                 disabled={filteredVersions.length === 0}
-                // Ajuste camelCase: v.id y v.name
                 options={filteredVersions.map((v) => ({ value: v.id, label: v.name }))}
               />
             </Form.Item>
@@ -209,7 +257,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
         </Row>
 
         <Divider titlePlacement="" orientation="left" className="text-gray-400 text-xs">EXTRAS</Divider>
-        
+
         <Table
           dataSource={extras}
           columns={columnsExtras}
@@ -218,7 +266,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess }) => {
           className="mb-4"
           locale={{ emptyText: "Sin cargos adicionales" }}
         />
-        
+
         <Button
           onClick={addExtra}
           type="dashed"

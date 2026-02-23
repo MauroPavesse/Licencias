@@ -1,4 +1,5 @@
-﻿using Licencias.Application.Entities.Subscriptions.DTOs;
+﻿using Licencias.Application.Entities.Products.DTOs;
+using Licencias.Application.Entities.Subscriptions.DTOs;
 using Licencias.Application.Shared;
 using Licencias.Domain.Entities;
 using Mapster;

@@ -108,7 +108,11 @@ const Dashboard = () => {
     },
     {
       title: "Importe",
-      render: (_, record) => `$ ${record.amountTotal.toFixed(2)}`,
+      render: (amount) => (
+        <span style={{ fontWeight: 'bold' }}>
+          ${amount.amountTotal.toLocaleString()}
+        </span>
+      ),
       key: "amountTotal",
       align: "right",
     },
@@ -232,6 +236,7 @@ const Dashboard = () => {
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         onSuccess={handleSuccess}
+        initialValues={selectedRecord}
       />
 
       <HistoryPaymentModal

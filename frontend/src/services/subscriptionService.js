@@ -5,11 +5,9 @@ import { SubscriptionUpdateCommand } from "../DTOs/subscriptions/SubscriptionUpd
 
 export const subscriptionService = {
   search: async (params) => {
-    console.log("Buscando...");
     const body = new SearchCommand(params);
 
     const response = await api.post("/subscription/search", body);
-    console.log(response);
     return response.data;
   },
 
@@ -25,7 +23,8 @@ export const subscriptionService = {
       expirationDate: formValues.dates[1].format('YYYY-MM-DDTHH:mm:ssZ'),
       state: formValues.state,
       customerId: formValues.customerId,
-      productVersionId: formValues.productVersionId
+      productVersionId: formValues.productVersionId,
+      hardwareId: formValues.hardwareId
     });
 
     const response = await api.put("/subscription", command);

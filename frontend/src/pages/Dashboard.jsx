@@ -1,6 +1,6 @@
 import { Modal, Menu, Dropdown, Card, Col, Row, Statistic, Table, message, Button } from "antd";
 import {
-  EditOutlined, 
+  EditOutlined,
   HistoryOutlined,
   ExclamationCircleOutlined,
   DollarOutlined,
@@ -98,55 +98,62 @@ const Dashboard = () => {
     {
       title: "Cliente",
       key: "customer",
-      // Acceso seguro a objetos anidados
+      fixed: 'left',
+      with: 150,
+      ellipsis: true,
       render: (_, record) => record.customer?.name || "N/A",
     },
     {
       title: "Producto",
       key: "product",
+      width: 150,
+      ellipsis: true,
       render: (_, record) => record.productVersion?.product?.name || "N/A",
     },
     {
       title: "Importe",
+      key: "amountTotal",
+      width: 110,
+      align: "right",
       render: (amount) => (
         <span style={{ fontWeight: 'bold' }}>
           ${amount.amountTotal.toLocaleString()}
         </span>
       ),
-      key: "amountTotal",
-      align: "right",
     },
     {
       title: "F. Expiración",
-      dataIndex: "expirationDate", // minúscula inicial
+      dataIndex: "expirationDate",
       key: "expirationDate",
-      render: (date) => (date ? new Date(date).toLocaleDateString() : "-"),
+      width: 120,
       align: "center",
+      render: (date) => (date ? new Date(date).toLocaleDateString() : "-"),
     },
     {
       title: "Estado",
-      dataIndex: "stateName", // minúscula inicial
+      dataIndex: "stateName",
       key: "state",
+      width: 100,
       align: "center",
     },
     {
-    title: "Acciones",
-    key: "action",
-    fixed: 'right', // Se queda fija al hacer scroll lateral en móvil
-    width: 80,
-    render: (_, record) => (
-      <Dropdown 
-        menu={{ items: menuItems(record) }} 
-        trigger={['click']}
-        placement="bottomRight"
-      >
-        <Button 
-          type="text" 
-          icon={<MoreOutlined style={{ fontSize: '20px' }} />} 
-        />
-      </Dropdown>
-    ),
-  },
+      title: "Acciones",
+      key: "action",
+      fixed: 'right', // Se queda fija al hacer scroll lateral en móvil
+      width: 80,
+      render: (_, record) => (
+        <Dropdown
+          menu={{ items: menuItems(record) }}
+          trigger={['click']}
+          placement="bottomRight"
+        >
+          <Button
+            type="text"
+            icon={<MoreOutlined style={{ fontSize: '18px' }} />}
+          />
+        </Dropdown>
+      ),
+    },
   ];
 
   const addSubscription = () => {
@@ -180,55 +187,62 @@ const Dashboard = () => {
   }).length;
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <Row gutter={16}>
-        <Col xs={24} sm={8} md={8}>
-          <Card variant="borderless" style={{ marginBottom: 5 }}>
+    <div style={{ padding: window.innerWidth < 768 ? "1rem" : "2rem" }}>
+      <Row gutter={[16, 16]}> {/* gutter con segundo valor añade espacio vertical al apilarse */}
+        <Col xs={24} sm={8}>
+          <Card variant="borderless">
             <Statistic
               title="Total mes"
               value={totalMes}
               precision={2}
-              styles={{ content: { color: "#3f8600" } }}
+              valueStyle={{ color: "#3f8600", fontSize: 'clamp(18px, 4vw, 24px)' }} // Tamaño de fuente adaptativo
               prefix={<DollarOutlined />}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={8} md={8}>
-          <Card variant="borderless" style={{ marginBottom: 5 }}>
+        <Col xs={24} sm={8}>
+          <Card variant="borderless">
             <Statistic
-              title="Subscripciones impagas"
-              value={impagas} // Subscripcion cuyo mes es menor o igual al mes actual
-              styles={{ content: { color: "#f1164dff" } }}
+              title="Impagas"
+              value={impagas}
+              valueStyle={{ color: "#f1164dff", fontSize: 'clamp(18px, 4vw, 24px)' }}
               prefix={<ExceptionOutlined />}
             />
           </Card>
         </Col>
-        <Col xs={24} sm={8} md={8}>
-          <Card variant="borderless" style={{ marginBottom: 5 }}>
+        <Col xs={24} sm={8}>
+          <Card variant="borderless">
             <Statistic
-              title="Subscripciones pagas"
-              value={pagas} // Subscripcion cuyo mes es mayor al mes actual
-              styles={{ content: { color: "#1699f1ff" } }}
+              title="Pagas"
+              value={pagas}
+              valueStyle={{ color: "#1699f1ff", fontSize: 'clamp(18px, 4vw, 24px)' }}
               prefix={<FileDoneOutlined />}
             />
           </Card>
         </Col>
       </Row>
 
-      <Card title="Subscripciones" style={{ marginTop: 5 }}>
+      <Card
+        title="Subscripciones"
+        style={{ marginTop: 20 }}
+        styles={{ body: { padding: window.innerWidth < 768 ? "8px" : "24px" } }}
+      >
         <Button
           type="primary"
-          style={{ marginBottom: 10 }}
+          style={{ marginBottom: 16 }}
           onClick={addSubscription}
+          block={window.innerWidth < 768}
         >
-          Agregar
+          Agregar Subscripción
         </Button>
+
         <Table
           columns={columns}
           dataSource={dataSource}
           loading={loading}
-          rowKey="Id"
-          pagination={{ pageSize: 10 }}
+          rowKey="id" // Asegúrate de que sea "id" en minúscula si así viene del backend
+          pagination={{ pageSize: 10, size: 'small' }}
+          scroll={{ x: 700 }} // Permite scroll horizontal sin romper el layout
         />
       </Card>
 

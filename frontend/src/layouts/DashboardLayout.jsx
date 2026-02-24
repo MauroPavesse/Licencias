@@ -33,15 +33,25 @@ const DashboardLayout = ({ children }) => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}>
-        <div className="demo-logo-vertical" />
+      <Sider 
+        collapsible 
+        collapsed={collapsed} 
+        onCollapse={value => setCollapsed(value)}
+        breakpoint='lg'
+        collapsedWidth='0'
+        onBreakpoint={(broken) => {
+          setCollapsed(broken);
+        }}
+      >
+        <div className="demo-logo-vertical" style={{ height: 32, margin: 16 }} />
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-        </Header>
-        <Content style={{ margin: '0 16px' }}>
-          {children}
+        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Content style={{ margin: '0 12px' }}>
+          <div style={{ padding: '16px 0' }}>
+            {children}
+          </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           MyM Systems ©{new Date().getFullYear()}

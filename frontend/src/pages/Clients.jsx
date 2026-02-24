@@ -57,6 +57,9 @@ const Clients = () => {
             title: "Cliente",
             key: "name",
             render: (_, record) => record.name,
+            fixed: 'left',
+            width: 150,
+            ellipsis: true
         },
         {
             title: "Celular",
@@ -65,24 +68,25 @@ const Clients = () => {
         },
         {
             title: "Email",
-            render: (_, record) => record.email,
             key: "email",
+            render: (_, record) => record.email,
+            responsive: ['lg']
         },
         {
             title: "Empresa",
-            render: (_, record) => record.business,
             key: "business",
+            render: (_, record) => record.business,
         },
         {
             title: "Acciones",
             key: "action",
             fixed: 'right', // Se queda fija al hacer scroll lateral en móvil
-            width: 80,
+            width: 100,
             render: (_, record) => (
-                <span className='flex'>
+                <div style={{ display: 'flex', gap: '8px' }}>
                     <Button 
                         icon={<EditOutlined />}
-                        onClick= {() => {
+                        onClick={() => {
                             setSelectedRecord(record);
                             setIsModalOpen(true);
                         }}
@@ -90,9 +94,9 @@ const Clients = () => {
                     <Button 
                         danger
                         icon={<DeleteOutlined />}
-                        onClick= {() => handleDelete(record)}
+                        onClick={() => handleDelete(record)}
                     />
-                </span>
+                </div>
             ),
         },
     ];
@@ -118,11 +122,16 @@ const Clients = () => {
 
     return (
         <div>
-            <Card title="Clientes" style={{ marginTop: 5 }}>
+            <Card 
+                title="Clientes" 
+                style={{ marginTop: 5 }}
+                styles={{ body: { padding: '12px' } }}
+            >
                 <Button
                     type='primary'
-                    style={{ marginBottom: 10 }}
+                    style={{ marginBottom: 16 }}
                     onClick={addClient}
+                    block={window.innerWidth < 768}
                 >
                     Agregar
                 </Button>
@@ -131,7 +140,8 @@ const Clients = () => {
                     dataSource={dataSource}
                     loading={loading}
                     rowKey="id"
-                    pagination={{ pageSize: 10 }}
+                    pagination={{ pageSize: 10, size: 'small' }}
+                    scroll={{ x: 800}}
                 />
             </Card>
 

@@ -26,7 +26,6 @@ const HistoryPaymentModal = ({ open, onCancel, subscriptionId, customerName }) =
         filters: [{ field: "SubscriptionId", ids: [subscriptionId] }]
       });
       const data = await paymentService.search(command);
-      console.log(data);
       setDataSource(data);
     } catch (error) {
       message.error("Error al cargar el historial de pagos: " + error);

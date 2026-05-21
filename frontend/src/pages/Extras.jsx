@@ -1,8 +1,8 @@
 import { Button, Card, Table, message, Modal } from 'antd'
 import {
-  EditOutlined,
-  DeleteOutlined,
-  ExclamationCircleOutlined
+    EditOutlined,
+    DeleteOutlined,
+    ExclamationCircleOutlined
 } from "@ant-design/icons";
 import React, { useState, useEffect } from 'react'
 import { extraService } from '../services/extraService';
@@ -14,6 +14,13 @@ const Extras = () => {
     const [selectedRecord, setSelectedRecord] = useState(null);
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const currencyFormatter = new Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
 
     const { confirm } = Modal;
 
@@ -63,10 +70,10 @@ const Extras = () => {
             key: "description",
             render: (_, record) => record.description,
         },
-        { 
-            title: 'Importe', 
-            key: 'price', 
-            render: (_, record) => `$${record.price}` 
+        {
+            title: 'Importe',
+            key: 'price',
+            render: (_, record) => currencyFormatter.format(record.price)
         },
         {
             title: "Acciones",
@@ -75,24 +82,24 @@ const Extras = () => {
             width: 80,
             render: (_, record) => (
                 <span className='flex'>
-                    <Button 
+                    <Button
                         icon={<EditOutlined />}
-                        onClick= {() => {
+                        onClick={() => {
                             setSelectedRecord(record);
                             setIsModalOpen(true);
                         }}
                     />
-                    <Button 
+                    <Button
                         danger
                         icon={<DeleteOutlined />}
-                        onClick= {() => handleDelete(record)}
+                        onClick={() => handleDelete(record)}
                     />
                 </span>
             ),
         },
     ];
 
-     // Función para obtener datos
+    // Función para obtener datos
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -129,7 +136,7 @@ const Extras = () => {
                 />
             </Card>
 
-            <ExtraModal 
+            <ExtraModal
                 open={isModalOpen}
                 initialValues={selectedRecord}
                 onCancel={handleCancel}

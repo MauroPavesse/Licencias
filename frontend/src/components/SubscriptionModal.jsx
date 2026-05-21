@@ -6,6 +6,7 @@ import { customerService } from "../services/customerService";
 import { productVersionService } from "../services/productVersionService";
 import { productService } from "../services/productService";
 import { SearchCommand } from "../DTOs/SearchCommand";
+import { extraService } from "../services/extraService";
 import dayjs from "dayjs";
 
 const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
@@ -16,6 +17,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
   const [products, setProducts] = useState([]);
   const [allVersions, setAllVersions] = useState([]);
   const [filteredVersions, setFilteredVersions] = useState([]);
+  const [catalogExtras, setCatalogExtras] = useState([]);
   const [loadingLists, setLoadingLists] = useState(false);
   const [extras, setExtras] = useState([]);
 
@@ -46,7 +48,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
           }
 
           // Seteamos extras
-          setExtras(initialValues.extras || []);
+          setExtras(initialValues.extras?.map(e => ({ ...e, key: e.id || Date.now() + Math.random() })) || []);
         } else {
           form.resetFields();
           setExtras([]);
@@ -62,15 +64,17 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
     setLoadingLists(true);
     try {
       const command = new SearchCommand();
-      const [resCust, resProd, resVers] = await Promise.all([
+      const [resCust, resProd, resVers, resExtraCatalog] = await Promise.all([
         customerService.search(command),
         productService.search(command),
         productVersionService.search(command),
+        extraService.search(command), // <-- Carga de extras disponibles
       ]);
 
       setCustomers(resCust);
       setProducts(resProd);
       setAllVersions(resVers);
+      setCatalogExtras(resExtraCatalog);
       return resVers;
     } catch (error) {
       message.error("Error al cargar listas");
@@ -87,50 +91,60 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
   };
 
   const addExtra = () => {
-    const newExtra = {
-      key: Date.now(),
-      name: "", 
-      description: "",
-      price: 0,
-    };
-    setExtras([...extras, newExtra]);
+    setExtras([...extras, { key: Date.now(), id: null, description: "", price: 0 }]);
+  };
+
+  const handleSelectExtraFromCatalog = (key, extraId) => {
+    const selected = catalogExtras.find(e => e.id === extraId);
+    if (!selected) return;
+
+    const newData = extras.map((item) =>
+      item.key === key
+        ? { ...item, id: selected.id, description: selected.name, price: selected.price }
+        : item
+    );
+    setExtras(newData);
   };
 
   const removeExtra = (key) => {
     setExtras(extras.filter((item) => item.key !== key));
   };
 
-  const updateExtra = (key, field, value) => {
+  const updateExtraPrice = (key, value) => {
     const newData = extras.map((item) =>
-      item.key === key ? { ...item, [field]: value } : item
+      item.key === key ? { ...item, price: value } : item
     );
     setExtras(newData);
   };
 
   const columnsExtras = [
     {
-      title: "Descripción / Nombre",
-      dataIndex: "description",
+      title: "Seleccionar Extra",
+      dataIndex: "id",
       render: (value, record) => (
-        <input
+        <Select
+          placeholder="Seleccione un extra"
+          className="w-full"
           value={value}
-          className="border p-1 w-full rounded outline-none focus:ring-1 focus:ring-blue-400"
-          placeholder="Ej: Instalación"
-          onChange={(e) => updateExtra(record.key, "description", e.target.value)}
+          onChange={(val) => handleSelectExtraFromCatalog(record.key, val)}
+          // Filtrar para que no puedan seleccionar el mismo extra dos veces (opcional)
+          options={catalogExtras.map(e => ({
+            value: e.id,
+            label: e.name,
+            disabled: extras.some(selected => selected.id === e.id)
+          }))}
         />
       ),
     },
     {
-      title: "Precio",
+      title: "Precio Unitario",
       dataIndex: "price",
-      width: 120,
-      render: (value, record) => (
-        <InputNumber
-          value={value}
-          min={0}
-          className="w-full"
-          onChange={(val) => updateExtra(record.key, "price", val)}
-        />
+      width: 150,
+      render: (value) => (
+        // Lo dejamos como texto o InputNumber deshabilitado si no se puede editar
+        <span className="font-semibold">
+          {value ? `$ ${value.toLocaleString()}` : "—"}
+        </span>
       ),
     },
     {
@@ -141,7 +155,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
           type="text"
           danger
           icon={<DeleteOutlined />}
-          onClick={() => removeExtra(record.key)}
+          onClick={() => setExtras(extras.filter((item) => item.key !== record.key))}
         />
       ),
     },
@@ -153,19 +167,17 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
       setConfirmLoading(true);
 
       const payload = {
-        Id: initialValues?.id ? initialValues.id : 0,
-        StartDate: values.dates[0].format("YYYY-MM-DDTHH:mm:ss"),
-        ExpirationDate: values.dates[1].format("YYYY-MM-DDTHH:mm:ss"),
-        State: values.state,
-        HardwareId: values.hardwareId,
-        CustomerId: values.customerId,
-        ProductVersionId: values.productVersionId,
+        id: initialValues?.id ? initialValues.id : 0,
+        startDate: values.dates[0].format("YYYY-MM-DDTHH:mm:ss"),
+        expirationDate: values.dates[1].format("YYYY-MM-DDTHH:mm:ss"),
+        state: values.state,
+        hardwareId: values.hardwareId,
+        customerId: values.customerId,
+        productVersionId: values.productVersionId,
         // Mapeo final para el backend (PascalCase para que coincida con C#)
-        Extras: extras.map(e => ({
-          Name: e.description, // Usamos la descripción como Nombre
-          Description: e.description,
-          Price: e.price
-        }))
+        extrasIds: extras
+          .filter(e => e.id !== null)
+          .map(e => e.id)
       };
 
       if (initialValues?.id) {
@@ -230,7 +242,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
             showSearch
             optionFilterProp="label"
             // Ajuste camelCase: c.id y c.name
-            options={customers.map((c) => ({ value: c.id, label: c.name }))}
+            options={customers.map((c) => ({ value: c.id, label: `${c.name} (${c.business})` }))}
           />
         </Form.Item>
 
@@ -256,7 +268,9 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
           </Col>
         </Row>
 
-        <Divider titlePlacement="" orientation="left" className="text-gray-400 text-xs">EXTRAS</Divider>
+        <Divider titlePlacement="left" className="text-gray-400 text-xs">
+          EXTRAS
+        </Divider>
 
         <Table
           dataSource={extras}

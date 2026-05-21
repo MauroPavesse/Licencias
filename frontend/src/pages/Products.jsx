@@ -1,8 +1,8 @@
 import { Button, Card, Table, message, Modal } from 'antd'
 import {
-  EditOutlined,
-  DeleteOutlined,
-  ExclamationCircleOutlined 
+    EditOutlined,
+    DeleteOutlined,
+    ExclamationCircleOutlined
 } from "@ant-design/icons";
 import React, { useState, useEffect } from 'react'
 import ProductModal from '../components/ProductModal';
@@ -15,6 +15,13 @@ const Products = () => {
     const [dataSource, setDataSource] = useState([]);
     const [loading, setLoading] = useState(false);
 
+    const currencyFormatter = new Intl.NumberFormat("es-AR", {
+        style: "currency",
+        currency: "ARS",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    });
+
     const { confirm } = Modal;
 
     const handleCancel = () => {
@@ -22,7 +29,7 @@ const Products = () => {
         setSelectedRecord(null);
     };
 
-    const addProduct= () => {
+    const addProduct = () => {
         setSelectedRecord(null);
         setIsModalOpen(true);
     };
@@ -65,17 +72,17 @@ const Products = () => {
             width: 80,
             render: (_, record) => (
                 <span className='flex'>
-                    <Button 
+                    <Button
                         icon={<EditOutlined />}
-                        onClick= {() => {
+                        onClick={() => {
                             setSelectedRecord(record);
                             setIsModalOpen(true);
                         }}
                     />
-                    <Button 
+                    <Button
                         danger
                         icon={<DeleteOutlined />}
-                        onClick= {() => handleDelete(record)}
+                        onClick={() => handleDelete(record)}
                     />
                 </span>
             ),
@@ -86,7 +93,7 @@ const Products = () => {
         const subColumns = [
             { title: 'Versión', dataIndex: 'version', key: 'name', render: (_, record) => record.name },
             { title: 'Descripción', dataIndex: 'description', key: 'description', render: (_, record) => record.description },
-            { title: 'Importe', dataIndex: 'price', key: 'price', render: (val) => `$${val}` },
+            { title: 'Importe', dataIndex: 'price', key: 'price', render: (val) => currencyFormatter.format(val) },
         ];
 
         return (
@@ -99,7 +106,7 @@ const Products = () => {
         );
     };
 
-     // Función para obtener datos
+    // Función para obtener datos
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -141,7 +148,7 @@ const Products = () => {
                 />
             </Card>
 
-            <ProductModal 
+            <ProductModal
                 open={isModalOpen}
                 initialValues={selectedRecord}
                 onCancel={handleCancel}

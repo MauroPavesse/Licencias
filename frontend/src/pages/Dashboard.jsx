@@ -195,7 +195,8 @@ const Dashboard = () => {
               title="Total mes"
               value={totalMes}
               precision={2}
-              valueStyle={{ color: "#3f8600", fontSize: 'clamp(18px, 4vw, 24px)' }} // Tamaño de fuente adaptativo
+              // CAMBIO AQUÍ: valueStyle -> styles={{ content: ... }}
+              styles={{ content: { color: "#3f8600", fontSize: 'clamp(18px, 4vw, 24px)' } }}
               prefix={<DollarOutlined />}
             />
           </Card>
@@ -205,7 +206,8 @@ const Dashboard = () => {
             <Statistic
               title="Impagas"
               value={impagas}
-              valueStyle={{ color: "#f1164dff", fontSize: 'clamp(18px, 4vw, 24px)' }}
+              // CAMBIO AQUÍ: valueStyle -> styles={{ content: ... }}
+              styles={{ content: { color: "#f1164dff", fontSize: 'clamp(18px, 4vw, 24px)' } }}
               prefix={<ExceptionOutlined />}
             />
           </Card>
@@ -215,7 +217,8 @@ const Dashboard = () => {
             <Statistic
               title="Pagas"
               value={pagas}
-              valueStyle={{ color: "#1699f1ff", fontSize: 'clamp(18px, 4vw, 24px)' }}
+              // CAMBIO AQUÍ: valueStyle -> styles={{ content: ... }}
+              styles={{ content: { color: "#1699f1ff", fontSize: 'clamp(18px, 4vw, 24px)' } }}
               prefix={<FileDoneOutlined />}
             />
           </Card>

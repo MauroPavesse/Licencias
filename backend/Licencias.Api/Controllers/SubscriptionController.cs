@@ -3,6 +3,7 @@ using Licencias.Application.Entities.Subscriptions.Delete;
 using Licencias.Application.Entities.Subscriptions.GetSubscription;
 using Licencias.Application.Entities.Subscriptions.Search;
 using Licencias.Application.Entities.Subscriptions.Update;
+using Licencias.Application.Entities.Subscriptions.ValidateLicenseQuery;
 using Licencias.Application.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -52,6 +53,15 @@ namespace Licencias.Api.Controllers
         public async Task<IActionResult> GetSubscription([FromBody] SubscriptionGetSubscriptionCommand command)
         {
             var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpGet("validate")]
+        public async Task<IActionResult> Validate([FromQuery] string domain)
+        {
+            var query = new ValidateLicenseQuery(domain);
+            var result = await _mediator.Send(query);
+
             return Ok(result);
         }
     }

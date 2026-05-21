@@ -1,0 +1,29 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: licencias_backend_nuevo
+    restart: always
+    networks:
+      - red-proyectos
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=sql_server_shared;Database=licenciasDb;User Id=sa;Password=43041735Mau#;TrustServerCertificate=True
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: licencias_frontend_nuevo
+    restart: always
+    networks:
+      - red-proyectos
+    ports:
+      - "8081:80"
+
+networks:
+  red-proyectos:
+    external: true

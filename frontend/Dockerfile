@@ -1,7 +1,15 @@
-FROM nginx:alpine
-# Copiamos el contenido de la carpeta dist a la ruta de nginx
-COPY ./dist /usr/share/nginx/html
-# Copiamos nuestro archivo de configuración personalizado
+# Etapa 1: Compilación de la app de React
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+# Etapa 2: Servidor Nginx ligero para producción
+FROM nginx:alpine 
+# EN VENTAS PUSE: FROM nginx:stable-alpine
+COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

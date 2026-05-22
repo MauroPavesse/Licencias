@@ -1,5 +1,4 @@
-﻿using Licencias.Domain.Entities;
-using Licencias.Domain.Enums;
+﻿using Licencias.Domain.Enums;
 using MediatR;
 
 namespace Licencias.Application.Entities.Subscriptions.ValidateLicenseQuery
@@ -8,7 +7,7 @@ namespace Licencias.Application.Entities.Subscriptions.ValidateLicenseQuery
 
     public record LicenseValidationResponse(bool IsActive);
 
-    public class ValidateLicenseQueryHandler
+    public class ValidateLicenseQueryHandler : IRequestHandler<ValidateLicenseQuery, LicenseValidationResponse>
     {
         private readonly ISubscriptionRepository _subscriptionRepository;
 

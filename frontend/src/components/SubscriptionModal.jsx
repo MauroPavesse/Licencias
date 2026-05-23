@@ -181,7 +181,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
       };
 
       if (initialValues?.id) {
-        await subscriptionService.update(initialValues.id, payload);
+        await subscriptionService.update(payload);
         message.success("Suscripción actualizada");
       } else {
         await subscriptionService.create(payload);

@@ -45,10 +45,11 @@ const ProductModal = ({ open, onCancel, onSuccess, initialValues }) => {
         Name: values.name,
         Description: values.description,
         ProductVersions: versions.map(v => ({
-          Name: v.name,      // Coincide con 'string Name' del record C#
+          Id: v.id || 0,
+          Name: v.name, 
           Description: v.description || "",
           Price: v.price || 0,
-          ProductId: 0          // El ID será asignado por la DB al crear el padre
+          ProductId: v.productId || 0
         }))
       };
 

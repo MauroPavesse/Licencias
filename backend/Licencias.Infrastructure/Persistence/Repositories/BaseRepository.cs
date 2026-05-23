@@ -78,6 +78,10 @@ namespace Licencias.Infrastructure.Persistence.Repositories
                 {
                     query = query.AsNoTracking();
                 }
+                else
+                {
+                    query = query.AsTracking();
+                }
 
                 return await query.ToListAsync();
             }

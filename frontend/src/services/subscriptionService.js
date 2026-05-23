@@ -17,17 +17,7 @@ export const subscriptionService = {
   },
 
   update: async (formValues) => {
-    const command = new SubscriptionUpdateCommand({
-      id: formValues.id,
-      startDate: formValues.dates[0].format('YYYY-MM-DDTHH:mm:ssZ'),
-      expirationDate: formValues.dates[1].format('YYYY-MM-DDTHH:mm:ssZ'),
-      state: formValues.state,
-      customerId: formValues.customerId,
-      productVersionId: formValues.productVersionId,
-      hardwareId: formValues.hardwareId
-    });
-
-    const response = await api.put("/subscription", command);
+    const response = await api.put("/subscription", formValues);
     return response.data;
   },
 

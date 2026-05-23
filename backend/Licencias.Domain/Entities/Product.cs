@@ -7,6 +7,6 @@ namespace Licencias.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
 
-        public IEnumerable<ProductVersion> ProductVersions { get; set; } = new List<ProductVersion>();
+        public List<ProductVersion> ProductVersions { get; set; } = new List<ProductVersion>();
     }
 }

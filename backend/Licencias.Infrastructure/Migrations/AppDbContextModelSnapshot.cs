@@ -196,6 +196,11 @@ namespace Licencias.Infrastructure.Migrations
 
                     b.Property<string>("HardwareId")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LicenseKey")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 

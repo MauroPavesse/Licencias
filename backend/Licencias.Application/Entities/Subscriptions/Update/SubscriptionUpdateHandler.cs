@@ -1,5 +1,4 @@
 ﻿using Licencias.Application.Entities.Extras;
-using Licencias.Application.Entities.Extras.Create;
 using Licencias.Application.Entities.Subscriptions.CreateToken;
 using Licencias.Application.Entities.Subscriptions.DTOs;
 using Licencias.Application.Entities.UnitOfWork;
@@ -10,7 +9,7 @@ using MediatR;
 
 namespace Licencias.Application.Entities.Subscriptions.Update
 {
-    public record SubscriptionUpdateCommand(int Id, DateTime StartDate, DateTime ExpirationDate, StateEnum State, int CustomerId, int ProductVersionId, List<int> ExtrasIds, string HardwareId) : IRequest<SubscriptionOutput>;
+    public record SubscriptionUpdateCommand(int Id, DateTime StartDate, DateTime ExpirationDate, StateEnum State, int CustomerId, int ProductVersionId, List<int> ExtrasIds, string HardwareId, string LicenseKey) : IRequest<SubscriptionOutput>;
 
     public class SubscriptionUpdateHandler : IRequestHandler<SubscriptionUpdateCommand, SubscriptionOutput>
     {
@@ -42,6 +41,7 @@ namespace Licencias.Application.Entities.Subscriptions.Update
             existingSubscription.CustomerId = request.CustomerId;
             existingSubscription.ProductVersionId = request.ProductVersionId;
             existingSubscription.HardwareId = request.HardwareId;
+            existingSubscription.LicenseKey = request.LicenseKey;
 
             existingSubscription.Token = subscriptionCreateTokenService.GenerarToken(
                 existingSubscription.CustomerId,

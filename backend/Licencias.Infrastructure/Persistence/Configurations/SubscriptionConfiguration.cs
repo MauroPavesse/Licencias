@@ -10,7 +10,7 @@ namespace Licencias.Infrastructure.Persistence.Configurations
         {
             builder.Property(t => t.HardwareId)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(100);
 
             builder.HasOne(t => t.Customer)
                    .WithMany(t => t.Subscriptions);
@@ -23,6 +23,10 @@ namespace Licencias.Infrastructure.Persistence.Configurations
 
             builder.HasMany(t => t.Extras)
                 .WithMany(t => t.Subscriptions);
+
+            builder.Property(t => t.LicenseKey)
+                .IsRequired()
+                .HasMaxLength(50);
         }
     }
 }

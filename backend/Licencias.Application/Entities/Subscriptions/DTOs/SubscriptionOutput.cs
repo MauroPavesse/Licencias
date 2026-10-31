@@ -22,5 +22,6 @@ namespace Licencias.Application.Entities.Subscriptions.DTOs
         public decimal AmountTotal => ProductVersion != null ? Extras.Sum(t => t.Price) + ProductVersion.Price : Extras != null ? Extras.Sum(t => t.Price) : 0;
         public string Token { get; set; } = string.Empty;
         public string HardwareId { get; set; } = string.Empty;
+        public string LicenseKey { get; set; } = string.Empty;
     }
 }

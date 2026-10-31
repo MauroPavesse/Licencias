@@ -172,6 +172,7 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
         expirationDate: values.dates[1].format("YYYY-MM-DDTHH:mm:ss"),
         state: values.state,
         hardwareId: values.hardwareId,
+        licenseKey: values.licenseKey,
         customerId: values.customerId,
         productVersionId: values.productVersionId,
         // Mapeo final para el backend (PascalCase para que coincida con C#)
@@ -228,10 +229,15 @@ const SubscriptionModal = ({ open, onCancel, onSuccess, initialValues }) => {
           </Col>
         </Row>
 
-        <Form.Item label="Hardware ID" name="hardwareId" rules={[{ required: true }]}>
+        <Form.Item label="Hardware ID" name="hardwareId">
           <Input
             placeholder='Hardware ID'
-            required
+          />
+        </Form.Item>
+
+        <Form.Item label="License Key" name="licenseKey">
+          <Input
+            placeholder='License Key'
           />
         </Form.Item>
 

@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Licencias.Application.Entities.Subscriptions.Create
 {
-    public record SubscriptionCreateCommand(DateTime StartDate, DateTime ExpirationDate, StateEnum State, int CustomerId, int ProductVersionId, List<int> ExtrasIds, string HardwareId) : IRequest<SubscriptionOutput>;
+    public record SubscriptionCreateCommand(DateTime StartDate, DateTime ExpirationDate, StateEnum State, int CustomerId, int ProductVersionId, List<int> ExtrasIds, string HardwareId, string LicenseKey) : IRequest<SubscriptionOutput>;
 
     public class SubscriptionCreateHandler : IRequestHandler<SubscriptionCreateCommand, SubscriptionOutput>
     {
@@ -36,6 +36,7 @@ namespace Licencias.Application.Entities.Subscriptions.Create
                 CustomerId = request.CustomerId,
                 ProductVersionId = request.ProductVersionId,
                 HardwareId = request.HardwareId,
+                LicenseKey = request.LicenseKey,
                 Token = subscriptionCreateTokenService.GenerarToken(request.CustomerId, request.ExpirationDate, request.HardwareId, request.ProductVersionId, (int)request.State)
             };
 

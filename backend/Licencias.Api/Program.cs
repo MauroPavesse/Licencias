@@ -14,7 +14,6 @@ using Licencias.Infrastructure.Data;
 using Licencias.Infrastructure.Persistence.Repositories;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +41,7 @@ builder.Services.AddScoped<IProductVersionRepository, ProductVersionRepository>(
 builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
 builder.Services.AddScoped<IUnitOfWorkRepository, UnitOfWorkRepository>();
 builder.Services.AddScoped<SubscriptionCreateTokenService>();
+builder.Services.AddScoped<RsaTokenService>();
 
 builder.Services.AddCors(options =>
 {

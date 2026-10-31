@@ -56,12 +56,10 @@ namespace Licencias.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("validate")]
-        public async Task<IActionResult> Validate([FromQuery] string domain)
+        [HttpPost("validate")]
+        public async Task<IActionResult> Validate([FromBody] ValidateLicenseQuery query)
         {
-            var query = new ValidateLicenseQuery(domain);
             var result = await _mediator.Send(query);
-
             return Ok(result);
         }
     }
